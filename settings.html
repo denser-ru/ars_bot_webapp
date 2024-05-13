@@ -70,7 +70,8 @@
 			tg.MainButton.hide() //скрываем кнопку 
 		}
 		else{ //иначе
-			tg.MainButton.show() //показываем 
+			tg.MainButton.show() //показываем
+			tg.showAlert(`Добро пожаловать, @${WebApp.WebAppUser.username}.`);
 		}
 	});
 
