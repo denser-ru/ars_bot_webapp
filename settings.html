@@ -1,115 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Test Telegram WebApps API</title>
-	<script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
+	<title>Настройки</title>
+	<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+	<script src="https://unpkg.com/@babel/standalone@7.10.3/babel.min.js" crossorigin></script>
+	<script src="https://telegram.org/js/telegram-web-app.js"></script>
+	<!-- Подключение стилей flatpickr -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<!-- Подключение скрипта flatpickr -->
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<!-- Подключение скрипта локализации для русского языка -->
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
 
 	<style>
-		body{
+		body {
 			color: var(--tg-theme-text-color);
 			background: var(--tg-theme-bg-color);
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			font-size: 18px;
 		}
 
-		.hint{
+		.hint {
 			color: var(--tg-theme-hint-color);
 		}
 
-		.link{
+		.link {
 			color: var(--tg-theme-link-color);
 		}
 
-		.button{
+		.button {
 			background: var(--tg-theme-button-color);
 			color: var(--tg-theme-button-text-color);
-			border: none;
-			font-size: 18px;
-		}
-
-		.button:not(:last-child){
-			margin-bottom: 20px
-		}
-
-		#usercard{
-			text-align: center;
 		}
 	</style>
 </head>
-
 <body>
-	<div id="usercard"> <!--Карта профиля, человека, который к нам обратился-->
-	</div>
-	<p>Just text</p> <!--Просто текст для проверки-->
-	<a class="link" href="https://denser-ru.github.io/ars_bot_webapp/">Link</a> <!--Просто ссылка для проверки-->
-	<p class="hint">Some little hint</p> <!--Просто текст-подсказка для проверки-->
-	<button id="btn" class="button">Show/Hide Main Button</button> <!--Кнопка, чтобы скрыть / показать основную кнопку-->
-	<button id="btnED" class="button">Enable/Disable Main Button</button> <!--Кнопка, чтобы сделать кнопку активной/неактивной-->
+	<div id="root"></div>
+
+	<script type="text/babel" data-presets="react,stage-3">
+		const Settings = () => {
+			const [startDate, setStartDate] = React.useState('');
+			const [endDate, setEndDate] = React.useState('');
+			const [sortBy, setSortBy] = React.useState('date'); // 'date' или 'relevance'
+
+			// Инициализация flatpickr после загрузки компонента
+			React.useEffect(() => {
+				const urlParams = new URLSearchParams(window.location.search);
+				const encodedSettings = urlParams.get('settings');
+				try {
+					const decodedSettings = JSON.parse(atob(encodedSettings));
+					console.log(decodedSettings);
+					// Установка дат начала и конца, если они существуют в decodedSettings
+					if (decodedSettings) {
+						if (decodedSettings.start_date) {
+							setStartDate(decodedSettings.start_date);
+						}
+						if (decodedSettings.end_date) {
+							setEndDate(decodedSettings.end_date);
+						}
+						if (decodedSettings.sort_by) {
+							setSortBy(decodedSettings.sort_by);
+						}
+					}
+				} catch (error) {
+					console.error('Ошибка при декодировании настроек:', error);
+				}
+				flatpickr('.date-input', {
+					locale: 'ru', // Установка русского языка
+					firstDayOfWeek: 1, // Начало недели с понедельника
+					minDate: '2019-01-01', // Минимальная дата
+					maxDate: new Date(), // Максимальная дата - сегодняшняя дата
+					onChange: (selectedDates, dateStr, instance) => {
+						// Обновление состояния в зависимости от того, какое поле ввода изменено
+						if (instance.input.name === 'start_date') {
+							setStartDate(dateStr);
+						} else if (instance.input.name === 'end_date') {
+							setEndDate(dateStr);
+						}
+					}
+				});
+			}, []);
+
+			// Функция для обработки отправки формы
+			const handleSubmit = () => {
+				const settings = {
+				start_date: startDate,
+				end_date: endDate,
+				sort_by: sortBy
+				};
+				// Отправка данных обратно в бота
+				Telegram.WebApp.sendData(JSON.stringify(settings));
+			};
+
+			return (
+				<div>
+					<input type="text" className="date-input" name="start_date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+					<p>Дата начала: {startDate}</p>
+					<input type="text" className="date-input" name="end_date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+					<p>Дата окончания: {endDate}</p>
+					<div>
+						<input
+							type="radio"
+							id="date"
+							name="sort"
+							value="date"
+							checked={sortBy === 'date'}
+							onChange={() => setSortBy('date')}
+						/>
+						<label htmlFor="date">По дате</label>
+						<input
+							type="radio"
+							id="relevance"
+							name="sort"
+							value="relevance"
+							checked={sortBy === 'relevance'}
+							onChange={() => setSortBy('relevance')}
+						/>
+						<label htmlFor="relevance">По релевантности</label>
+						<p>Сортировка по: {sortBy}</p>
+						<button onClick={handleSubmit}>Отправить настройки</button>
+					</div>
+				</div>
+			);
+		};
+
+		const root = ReactDOM.createRoot(document.getElementById("root"));
+		root.render(<Settings />);
+	</script>
 </body>
-
-<script>
-	let tg = window.Telegram.WebApp; //получаем объект webapp телеграма 
-
-	tg.expand(); //расширяем на все окно  
-
-	tg.MainButton.text = "Changed Text"; //изменяем текст кнопки 
-	tg.MainButton.setText("Changed Text1"); //изменяем текст кнопки иначе
-	tg.MainButton.textColor = "#F55353"; //изменяем цвет текста кнопки
-	tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
-	tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
-
-	let btn = document.getElementById("btn"); //получаем кнопку скрыть/показать 
-
-	btn.addEventListener('click', function(){ //вешаем событие на нажатие html-кнопки
-		if (tg.MainButton.isVisible){ //если кнопка показана 
-			tg.MainButton.hide() //скрываем кнопку 
-		}
-		else{ //иначе
-			tg.MainButton.show() //показываем
-			tg.showAlert(`Добро пожаловать, @${tg.WebAppUser.username}.`);
-		}
-	});
-
-	let btnED = document.getElementById("btnED"); //получаем кнопку активировать/деактивировать
-	btnED.addEventListener('click', function(){ //вешаем событие на нажатие html-кнопки
-		if (tg.MainButton.isActive){ //если кнопка показана 
-			tg.MainButton.setParams({"color": "#E0FFFF"}); //меняем цвет
-			tg.MainButton.disable() //скрываем кнопку 
-		}
-		else{ //иначе
-			tg.MainButton.setParams({"color": "#143F6B"}); //меняем цвет
-			tg.MainButton.enable() //показываем 
-		}
-	});
-
-	Telegram.WebApp.onEvent('mainButtonClicked', function(){
-		tg.sendData("some string that we need to send"); 
-		//при клике на основную кнопку отправляем данные в строковом виде
-	});
-
-
-	let usercard = document.getElementById("usercard"); //получаем блок usercard 
-
-	let profName = document.createElement('p'); //создаем параграф
-	profName.innerText = `${tg.initDataUnsafe.user.first_name}
-	${tg.initDataUnsafe.user.last_name}
-	${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
-	//выдем имя, "фамилию", через тире username и код языка
-	usercard.appendChild(profName); //добавляем 
-
-	let userid = document.createElement('p'); //создаем еще параграф 
-	userid.innerText = `${tg.initDataUnsafe.user.id}`; //показываем user_id
-	usercard.appendChild(userid); //добавляем
-
-
-	//работает только в attachment menu
-	// let pic = document.createElement('img'); //создаем img
-	// pic.src = tg.initDataUnsafe.user.photo_url; //задаём src 
-	// usercard.appendChild(pic); //добавляем элемент в карточку 
-</script>
 </html>
