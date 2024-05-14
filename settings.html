@@ -44,6 +44,13 @@
 			const [endDate, setEndDate] = React.useState('');
 			const [sortBy, setSortBy] = React.useState('date'); // 'date' или 'relevance'
 
+
+			var WebApp = window.Telegram.WebApp;
+			var MainButton = WebApp.MainButton;
+			MainButton.show();
+			MainButton.onClick(function() {
+				WebApp.showAlert("Хорошо, ты нажал на главную кнопку.");
+			});
 			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
 				const urlParams = new URLSearchParams(window.location.search);
