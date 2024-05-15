@@ -46,9 +46,8 @@
 
 
 			let WebApp = window.Telegram.WebApp;
-			let MainButton = WebApp.MainButton;
-			MainButton.text = "Сохранить настройки";
-			MainButton.show();
+			let BackButton = WebApp.BackButton;
+			BackButton.show();
 
 			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
@@ -86,17 +85,7 @@
 						}
 					}
 				});
-				MainButton.onClick(function() {
-						const settings = {
-						start_date: startDate,
-						end_date: endDate,
-						sort_by: sortBy
-					};
-					// Отправка данных обратно в бота
-					WebApp.showAlert(JSON.stringify(settings));
-					Telegram.WebApp.sendData(JSON.stringify(settings));
-				});
-			}, [startDate, endDate, sortBy]);
+			}, []);
 
 			// Функция для обработки отправки формы
 			const handleSubmit = () => {
@@ -112,7 +101,7 @@
 			return (
 				<div style={{ backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)' }}>
 					<div className="form-group">
-						<label htmlFor="start_date" style={{ color: 'var(--tg-theme-text-color)' }}>Дата начала:</label>
+						<label htmlFor="start_date" style={{ color: 'var(--tg-theme-text-color)' }}>Дата начала поиска:</label>
 						<input
 							type="text"
 							className="form-control date-input"
@@ -120,7 +109,6 @@
 							name="start_date"
 							value={startDate}
 							onChange={(e) => setStartDate(e.target.value)}
-							style={{ color: 'var(--tg-theme-text-color)', borderColor: 'var(--tg-theme-hint-color)' }}
 						/>
 					</div>
 					<div className="form-group">
@@ -132,7 +120,6 @@
 							name="end_date"
 							value={endDate}
 							onChange={(e) => setEndDate(e.target.value)}
-							style={{ color: 'var(--tg-theme-text-color)', borderColor: 'var(--tg-theme-hint-color)' }}
 						/>
 					</div>
 					<div>
@@ -165,10 +152,10 @@
 							color: 'var(--tg-theme-button-text-color)'
 						}}
 					>
-						Отправить настройки
+						Сохранить настройки
 					</button>
 					<p>
-						<div style={{fontSize: "8px"}}>v004</div>
+						<div style={{fontSize: "8px"}}>v005</div>
 					</p>
 				</div>
 			);
