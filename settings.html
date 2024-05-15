@@ -45,8 +45,9 @@
 			const [sortBy, setSortBy] = React.useState('date'); // 'date' или 'relevance'
 
 
-			var WebApp = window.Telegram.WebApp;
-			var MainButton = WebApp.MainButton;
+			let WebApp = window.Telegram.WebApp;
+			let MainButton = WebApp.MainButton;
+			MainButton.text = "Сохранить настройки";
 			MainButton.show();
 			MainButton.onClick(function() {
 				WebApp.showAlert("Хорошо, ты нажал на главную кнопку.");
