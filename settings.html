@@ -50,7 +50,13 @@
 			MainButton.text = "Сохранить настройки";
 			MainButton.show();
 			MainButton.onClick(function() {
-				handleSubmit();
+				const settings = {
+				start_date: startDate,
+				end_date: endDate,
+				sort_by: sortBy
+				};
+				// Отправка данных обратно в бота
+				Telegram.WebApp.sendData(JSON.stringify(settings));
 			});
 			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
