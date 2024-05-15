@@ -50,7 +50,7 @@
 			MainButton.text = "Сохранить настройки";
 			MainButton.show();
 			MainButton.onClick(function() {
-				WebApp.showAlert("Хорошо, ты нажал на главную кнопку.");
+				handleSubmit();
 			});
 			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
@@ -102,12 +102,34 @@
 			};
 
 			return (
-				<div>
-					<input type="text" className="date-input" name="start_date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-					<p>Дата начала: {startDate}</p>
-					<input type="text" className="date-input" name="end_date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-					<p>Дата окончания: {endDate}</p>
+				<div style={{ backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)' }}>
+					<div className="form-group">
+						<label htmlFor="start_date" style={{ color: 'var(--tg-theme-text-color)' }}>Дата начала:</label>
+						<input
+							type="text"
+							className="form-control date-input"
+							id="start_date"
+							name="start_date"
+							value={startDate}
+							onChange={(e) => setStartDate(e.target.value)}
+							style={{ color: 'var(--tg-theme-text-color)', borderColor: 'var(--tg-theme-hint-color)' }}
+						/>
+						<p style={{ color: 'var(--tg-theme-text-color)' }}>{startDate}</p>
+					</div>
+					<div className="form-group">
+						<label htmlFor="end_date" style={{ color: 'var(--tg-theme-text-color)' }}>Дата окончания:</label>
+						<input
+							type="text"
+							className="form-control date-input"
+							id="end_date"
+							name="end_date"
+							value={endDate}
+							onChange={(e) => setEndDate(e.target.value)}
+							style={{ color: 'var(--tg-theme-text-color)', borderColor: 'var(--tg-theme-hint-color)' }}
+						/>
+					</div>
 					<div>
+						<p style={{ color: 'var(--tg-theme-text-color)' }}>Сортировка по:</p>
 						<input
 							type="radio"
 							id="date"
@@ -115,8 +137,9 @@
 							value="date"
 							checked={sortBy === 'date'}
 							onChange={() => setSortBy('date')}
+							style={{ accentColor: 'var(--tg-theme-button-color)' }}
 						/>
-						<label htmlFor="date">По дате</label>
+						<label htmlFor="date" style={{ color: 'var(--tg-theme-text-color)' }}>По дате</label>
 						<input
 							type="radio"
 							id="relevance"
@@ -124,10 +147,9 @@
 							value="relevance"
 							checked={sortBy === 'relevance'}
 							onChange={() => setSortBy('relevance')}
+							style={{ accentColor: 'var(--tg-theme-button-color)' }}
 						/>
-						<label htmlFor="relevance">По релевантности</label>
-						<p>Сортировка по: {sortBy}</p>
-						<button onClick={handleSubmit}>Отправить настройки</button>
+						<label htmlFor="relevance" style={{ color: 'var(--tg-theme-text-color)' }}>По релевантности</label>
 					</div>
 				</div>
 			);
