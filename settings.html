@@ -56,6 +56,7 @@
 				sort_by: sortBy
 				};
 				// Отправка данных обратно в бота
+				alert(settings);
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			});
 			// Инициализация flatpickr после загрузки компонента
