@@ -49,11 +49,11 @@
 			let MainButton = WebApp.MainButton;
 			MainButton.show();
 
-			const urlParams = new URLSearchParams(window.location.search);
-			const encodedSettings = urlParams.get('settings');
 
 			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
+				const urlParams = new URLSearchParams(window.location.search);
+				const encodedSettings = urlParams.get('settings');
 				try {
 					const decodedSettings = JSON.parse(atob(encodedSettings));
 					console.log(decodedSettings);
@@ -86,7 +86,18 @@
 						}
 					}
 				});
-			}, []);
+				// Получение экземпляров flatpickr для каждого поля ввода
+				const startPicker = flatpickr(document.getElementById('start_date'), { /* опции */ });
+				const endPicker = flatpickr(document.getElementById('end_date'), { /* опции */ });
+
+				// Обновление виджетов календаря при изменении дат
+				if (startDate) {
+					startPicker.setDate(startDate, false);
+				}
+				if (endDate) {
+					endPicker.setDate(endDate, false);
+				}
+			}, [startDate, endDate]);
 
 			// Функция для обработки отправки формы
 			const handleSubmit = () => {
@@ -100,9 +111,9 @@
 			};
 
 			return (
-				<div style={{ backgroundColor: 'var(--tg-theme-bg-color)', color: 'var(--tg-theme-text-color)' }}>
+				<div>
 					<div className="form-group">
-						<label htmlFor="start_date" style={{ color: 'var(--tg-theme-text-color)' }}>Дата начала поиска:</label>
+						<label htmlFor="start_date">Дата начала поиска:</label>
 						<input
 							type="text"
 							className="form-control date-input"
@@ -113,7 +124,7 @@
 						/>
 					</div>
 					<div className="form-group">
-						<label htmlFor="end_date" style={{ color: 'var(--tg-theme-text-color)' }}>Дата окончания:</label>
+						<label htmlFor="end_date">Дата окончания:</label>
 						<input
 							type="text"
 							className="form-control date-input"
@@ -124,7 +135,7 @@
 						/>
 					</div>
 					<div>
-						<p style={{ color: 'var(--tg-theme-text-color)' }}>Сортировка по:</p>
+						<p>Сортировка по:</p>
 						<input
 							type="radio"
 							id="date"
@@ -132,9 +143,8 @@
 							value="date"
 							checked={sortBy === 'date'}
 							onChange={() => setSortBy('date')}
-							style={{ accentColor: 'var(--tg-theme-button-color)' }}
 						/>
-						<label htmlFor="date" style={{ color: 'var(--tg-theme-text-color)' }}>По дате</label>
+						<label htmlFor="date">По дате</label>
 						<input
 							type="radio"
 							id="relevance"
@@ -142,21 +152,16 @@
 							value="relevance"
 							checked={sortBy === 'relevance'}
 							onChange={() => setSortBy('relevance')}
-							style={{ accentColor: 'var(--tg-theme-button-color)' }}
 						/>
-						<label htmlFor="relevance" style={{ color: 'var(--tg-theme-text-color)' }}>По релевантности</label>
+						<label htmlFor="relevance">По релевантности</label>
 					</div>
 					<button
 						onClick={handleSubmit}
-						style={{
-							backgroundColor: 'var(--tg-theme-button-color)',
-							color: 'var(--tg-theme-button-text-color)'
-						}}
 					>
 						Сохранить настройки
 					</button>
 					<p>
-						<div style={{fontSize: "8px"}}>v007</div>
+						<span style={{fontSize: "8px"}}>v_a0.0.008</span>
 					</p>
 				</div>
 			);
