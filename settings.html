@@ -56,8 +56,7 @@
 				sort_by: sortBy
 				};
 				// Отправка данных обратно в бота
-				alert(settings);
-				WebApp.showAlert(settings);
+				WebApp.showAlert(JSON.stringify(settings));
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			});
 			// Инициализация flatpickr после загрузки компонента
@@ -158,6 +157,15 @@
 						/>
 						<label htmlFor="relevance" style={{ color: 'var(--tg-theme-text-color)' }}>По релевантности</label>
 					</div>
+					<button
+						onClick={handleSubmit}
+						style={{
+							backgroundColor: 'var(--tg-theme-button-color)',
+							color: 'var(--tg-theme-button-text-color)'
+						}}
+					>
+						Отправить настройки
+					</button>
 					<p>
 						<div style={{fontSize: "8px"}}>v001</div>
 					</p>
