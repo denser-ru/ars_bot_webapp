@@ -57,6 +57,7 @@
 				};
 				// Отправка данных обратно в бота
 				alert(settings);
+				WebApp.showAlert(settings);
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			});
 			// Инициализация flatpickr после загрузки компонента
@@ -157,6 +158,9 @@
 						/>
 						<label htmlFor="relevance" style={{ color: 'var(--tg-theme-text-color)' }}>По релевантности</label>
 					</div>
+					<p>
+						<div style={{fontSize: "8px"}}>v001</div>
+					</p>
 				</div>
 			);
 		};
