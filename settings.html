@@ -46,31 +46,32 @@
 
 
 			let WebApp = window.Telegram.WebApp;
-			let BackButton = WebApp.BackButton;
-			BackButton.show();
+			let MainButton = WebApp.MainButton;
+			MainButton.show();
+
+			const urlParams = new URLSearchParams(window.location.search);
+			const encodedSettings = urlParams.get('settings');
+			try {
+				const decodedSettings = JSON.parse(atob(encodedSettings));
+				console.log(decodedSettings);
+				// Установка дат начала и конца, если они существуют в decodedSettings
+				if (decodedSettings) {
+					if (decodedSettings.start_date) {
+						setStartDate(decodedSettings.start_date);
+					}
+					if (decodedSettings.end_date) {
+						setEndDate(decodedSettings.end_date);
+					}
+					if (decodedSettings.sort_by) {
+						setSortBy(decodedSettings.sort_by);
+					}
+			}
+			} catch (error) {
+				console.error('Ошибка при декодировании настроек:', error);
+			}
 
 			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
-				const urlParams = new URLSearchParams(window.location.search);
-				const encodedSettings = urlParams.get('settings');
-				try {
-					const decodedSettings = JSON.parse(atob(encodedSettings));
-					console.log(decodedSettings);
-					// Установка дат начала и конца, если они существуют в decodedSettings
-					if (decodedSettings) {
-						if (decodedSettings.start_date) {
-							setStartDate(decodedSettings.start_date);
-						}
-						if (decodedSettings.end_date) {
-							setEndDate(decodedSettings.end_date);
-						}
-						if (decodedSettings.sort_by) {
-							setSortBy(decodedSettings.sort_by);
-						}
-					}
-				} catch (error) {
-					console.error('Ошибка при декодировании настроек:', error);
-				}
 				flatpickr('.date-input', {
 					locale: 'ru', // Установка русского языка
 					firstDayOfWeek: 1, // Начало недели с понедельника
@@ -155,7 +156,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<div style={{fontSize: "8px"}}>v005</div>
+						<div style={{fontSize: "8px"}}>v006</div>
 					</p>
 				</div>
 			);
