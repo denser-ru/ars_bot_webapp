@@ -45,9 +45,9 @@
 			const [sortBy, setSortBy] = React.useState('date'); // 'date' или 'relevance'
 
 
-			let WebApp = window.Telegram.WebApp;
-			let MainButton = WebApp.MainButton;
-			MainButton.show();
+			// let WebApp = window.Telegram.WebApp;
+			// let MainButton = WebApp.MainButton;
+			// MainButton.show();
 
 
 			// Инициализация flatpickr после загрузки компонента
@@ -98,6 +98,22 @@
 					onChange: (selectedDates, dateStr) => {
 						setEndDate(dateStr);
 					}
+				});
+
+				let WebApp = window.Telegram.WebApp;
+				let MainButton = WebApp.MainButton;
+
+				// Показываем или скрываем кнопку в зависимости от состояния формы
+				if (startDate !== '' && endDate !== '') {
+					MainButton.show();
+					MainButton.setText('Сохранить настройки');
+				} else {
+					MainButton.hide();
+				}
+
+				// Привязываем функцию отправки к событию клика по кнопке
+				MainButton.onClick(() => {
+					handleSubmit(); // Ваша функция отправки данных
 				});
 			}, []);
 
@@ -159,7 +175,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.010</span>
+						<span style={{fontSize: "8px"}}>v_a0.0.011</span>
 					</p>
 				</div>
 			);
