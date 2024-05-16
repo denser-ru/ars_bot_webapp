@@ -103,13 +103,7 @@
 				let WebApp = window.Telegram.WebApp;
 				let MainButton = WebApp.MainButton;
 
-				// Показываем или скрываем кнопку в зависимости от состояния формы
-				if (startDate !== '' && endDate !== '') {
-					MainButton.show();
-					MainButton.setText('Сохранить настройки');
-				} else {
-					MainButton.hide();
-				}
+				MainButton.show();
 
 				// Привязываем функцию отправки к событию клика по кнопке
 				MainButton.onClick(() => {
@@ -175,7 +169,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.011</span>
+						<span style={{fontSize: "8px"}}>v_a0.0.012</span>
 					</p>
 				</div>
 			);
