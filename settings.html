@@ -99,16 +99,6 @@
 						setEndDate(dateStr);
 					}
 				});
-
-				let WebApp = window.Telegram.WebApp;
-				let MainButton = WebApp.MainButton;
-
-				MainButton.show();
-
-				// Привязываем функцию отправки к событию клика по кнопке
-				MainButton.onClick(() => {
-					handleSubmit(); // Ваша функция отправки данных
-				});
 			}, []);
 
 			// Функция для обработки отправки формы
@@ -121,6 +111,18 @@
 				// Отправка данных обратно в бота
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			};
+
+
+			let WebApp = window.Telegram.WebApp;
+			let MainButton = WebApp.MainButton;
+
+			MainButton.setText('Сохранить настройки');
+			MainButton.show();
+
+			// Привязываем функцию отправки к событию клика по кнопке
+			MainButton.onClick(() => {
+				handleSubmit(); // Ваша функция отправки данных
+			});
 
 			return (
 				<div>
@@ -169,7 +171,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.012</span>
+						<span style={{fontSize: "8px"}}>v_a0.0.013</span>
 					</p>
 				</div>
 			);
