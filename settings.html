@@ -112,18 +112,6 @@
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			};
 
-
-			let WebApp = window.Telegram.WebApp;
-			let MainButton = WebApp.MainButton;
-
-			MainButton.setText('Сохранить настройки');
-			MainButton.show();
-
-			// Привязываем функцию отправки к событию клика по кнопке
-			MainButton.onClick(() => {
-				handleSubmit(); // Ваша функция отправки данных
-			});
-
 			return (
 				<div>
 					<div className="form-group">
@@ -171,7 +159,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.013</span>
+						<span style={{fontSize: "8px"}}>v_a0.0.014</span>
 					</p>
 				</div>
 			);
