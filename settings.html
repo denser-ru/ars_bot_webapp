@@ -54,6 +54,8 @@
 			React.useEffect(() => {
 				const urlParams = new URLSearchParams(window.location.search);
 				const encodedSettings = urlParams.get('settings');
+				let initialStartDate = '';
+				let initialEndDate = '';
 				try {
 					const decodedSettings = JSON.parse(atob(encodedSettings));
 					console.log(decodedSettings);
@@ -61,9 +63,11 @@
 					if (decodedSettings) {
 						if (decodedSettings.start_date) {
 							setStartDate(decodedSettings.start_date);
+							initialStartDate = decodedSettings.start_date;
 						}
 						if (decodedSettings.end_date) {
 							setEndDate(decodedSettings.end_date);
+							initialEndDate = decodedSettings.end_date;
 						}
 						if (decodedSettings.sort_by) {
 							setSortBy(decodedSettings.sort_by);
@@ -72,32 +76,30 @@
 				} catch (error) {
 					console.error('Ошибка при декодировании настроек:', error);
 				}
-				flatpickr('.date-input', {
-					locale: 'ru', // Установка русского языка
-					firstDayOfWeek: 1, // Начало недели с понедельника
-					minDate: '2019-01-01', // Минимальная дата
-					maxDate: new Date(), // Максимальная дата - сегодняшняя дата
-					onChange: (selectedDates, dateStr, instance) => {
-						// Обновление состояния в зависимости от того, какое поле ввода изменено
-						if (instance.input.name === 'start_date') {
-							setStartDate(dateStr);
-						} else if (instance.input.name === 'end_date') {
-							setEndDate(dateStr);
-						}
+				// Инициализация flatpickr для поля начальной даты
+				flatpickr('#start_date', {
+					locale: 'ru',
+					firstDayOfWeek: 1,
+					minDate: '2019-01-01',
+					maxDate: new Date(),
+					defaultDate: initialStartDate, // Только начальная дата
+					onChange: (selectedDates, dateStr) => {
+						setStartDate(dateStr);
 					}
 				});
-				// Получение экземпляров flatpickr для каждого поля ввода
-				const startPicker = flatpickr(document.getElementById('start_date'), { /* опции */ });
-				const endPicker = flatpickr(document.getElementById('end_date'), { /* опции */ });
 
-				// Обновление виджетов календаря при изменении дат
-				if (startDate) {
-					startPicker.setDate(startDate, false);
-				}
-				if (endDate) {
-					endPicker.setDate(endDate, false);
-				}
-			}, [startDate, endDate]);
+				// Инициализация flatpickr для поля конечной даты
+				flatpickr('#end_date', {
+					locale: 'ru',
+					firstDayOfWeek: 1,
+					minDate: '2019-01-01',
+					maxDate: new Date(),
+					defaultDate: initialEndDate, // Только конечная дата
+					onChange: (selectedDates, dateStr) => {
+						setEndDate(dateStr);
+					}
+				});
+			}, []);
 
 			// Функция для обработки отправки формы
 			const handleSubmit = () => {
@@ -119,8 +121,6 @@
 							className="form-control date-input"
 							id="start_date"
 							name="start_date"
-							value={startDate}
-							onChange={(e) => setStartDate(e.target.value)}
 						/>
 					</div>
 					<div className="form-group">
@@ -130,8 +130,6 @@
 							className="form-control date-input"
 							id="end_date"
 							name="end_date"
-							value={endDate}
-							onChange={(e) => setEndDate(e.target.value)}
 						/>
 					</div>
 					<div>
@@ -161,7 +159,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.008</span>
+						<span style={{fontSize: "8px"}}>v_a0.0.010</span>
 					</p>
 				</div>
 			);
