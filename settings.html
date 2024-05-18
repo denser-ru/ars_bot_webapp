@@ -138,11 +138,20 @@
 							type="radio"
 							id="date"
 							name="sort"
-							value="date"
-							checked={sortBy === 'date'}
-							onChange={() => setSortBy('date')}
+							value="date_asc"
+							checked={sortBy === 'date_asc'}
+							onChange={() => setSortBy('date_asc')}
 						/>
-						<label htmlFor="date">По дате</label>
+						<label htmlFor="date">По дате ↑ </label>
+						<input
+							type="radio"
+							id="date"
+							name="sort"
+							value="date_desc"
+							checked={sortBy === 'date_desc'}
+							onChange={() => setSortBy('date_desc')}
+						/>
+						<label htmlFor="date">По дате ↓</label>
 						<input
 							type="radio"
 							id="relevance"
@@ -159,7 +168,7 @@
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.014</span>
+						<span style={{fontSize: "8px"}}>v_a0.0.015</span>
 					</p>
 				</div>
 			);
