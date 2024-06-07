@@ -42,73 +42,95 @@
 		const Settings = () => {
 			const [startDate, setStartDate] = React.useState('');
 			const [endDate, setEndDate] = React.useState('');
-			const [sortBy, setSortBy] = React.useState('date'); // 'date' или 'relevance'
+			const [sortBy, setSortBy] = React.useState('date');
+			const [isStartDateEnabled, setIsStartDateEnabled] = React.useState(false);
+			const [isEndDateEnabled, setIsEndDateEnabled] = React.useState(false);
 
-
-			// let WebApp = window.Telegram.WebApp;
-			// let MainButton = WebApp.MainButton;
-			// MainButton.show();
-
-
-			// Инициализация flatpickr после загрузки компонента
 			React.useEffect(() => {
 				const urlParams = new URLSearchParams(window.location.search);
 				const encodedSettings = urlParams.get('settings');
 				let initialStartDate = '';
 				let initialEndDate = '';
+
 				try {
 					const decodedSettings = JSON.parse(atob(encodedSettings));
 					console.log(decodedSettings);
-					// Установка дат начала и конца, если они существуют в decodedSettings
+
 					if (decodedSettings) {
 						if (decodedSettings.start_date) {
 							setStartDate(decodedSettings.start_date);
 							initialStartDate = decodedSettings.start_date;
+							setIsStartDateEnabled(decodedSettings.start_date !== "*");
 						}
 						if (decodedSettings.end_date) {
 							setEndDate(decodedSettings.end_date);
 							initialEndDate = decodedSettings.end_date;
+							setIsEndDateEnabled(decodedSettings.end_date !== "*");
 						}
 						if (decodedSettings.sort_by) {
 							setSortBy(decodedSettings.sort_by);
 						}
-				}
+					}
 				} catch (error) {
 					console.error('Ошибка при декодировании настроек:', error);
 				}
-				// Инициализация flatpickr для поля начальной даты
-				flatpickr('#start_date', {
+
+				const startDateInput = document.getElementById('start_date');
+				const fpStartDate = flatpickr(startDateInput, {
 					locale: 'ru',
 					firstDayOfWeek: 1,
 					minDate: '2019-01-01',
 					maxDate: new Date(),
-					defaultDate: initialStartDate, // Только начальная дата
+					defaultDate: initialStartDate,
 					onChange: (selectedDates, dateStr) => {
 						setStartDate(dateStr);
-					}
+					},
 				});
 
-				// Инициализация flatpickr для поля конечной даты
-				flatpickr('#end_date', {
+				const endDateInput = document.getElementById('end_date');
+				const fpEndDate = flatpickr(endDateInput, {
 					locale: 'ru',
 					firstDayOfWeek: 1,
 					minDate: '2019-01-01',
 					maxDate: new Date(),
-					defaultDate: initialEndDate, // Только конечная дата
+					defaultDate: initialEndDate,
 					onChange: (selectedDates, dateStr) => {
 						setEndDate(dateStr);
-					}
+					},
 				});
+
+				return () => {
+					fpStartDate.destroy();
+					fpEndDate.destroy();
+				};
 			}, []);
 
-			// Функция для обработки отправки формы
+			React.useEffect(() => {
+				const startDateInput = document.getElementById('start_date');
+				startDateInput.disabled = !isStartDateEnabled;
+				if (!isStartDateEnabled) {
+					startDateInput.value = "*";
+				} else {
+					startDateInput.value = startDate ? startDate : '';
+				}
+			}, [isStartDateEnabled, startDate]);
+
+			React.useEffect(() => {
+				const endDateInput = document.getElementById('end_date');
+				endDateInput.disabled = !isEndDateEnabled;
+				if (!isEndDateEnabled) {
+					endDateInput.value = "*";
+				} else {
+					endDateInput.value = endDate ? endDate : '';
+				}
+			}, [isEndDateEnabled, endDate]);
+
 			const handleSubmit = () => {
 				const settings = {
-				start_date: startDate,
-				end_date: endDate,
-				sort_by: sortBy
+					start_date: isStartDateEnabled ? startDate : "*",
+					end_date: isEndDateEnabled ? endDate : "*",
+					sort_by: sortBy
 				};
-				// Отправка данных обратно в бота
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			};
 
@@ -122,7 +144,15 @@
 							id="start_date"
 							name="start_date"
 						/>
+						<input
+							type="checkbox"
+							id="enable_start_date"
+							checked={isStartDateEnabled}
+							onChange={() => setIsStartDateEnabled(!isStartDateEnabled)}
+						/>
+						<label htmlFor="enable_start_date">Включить</label>
 					</div>
+
 					<div className="form-group">
 						<label htmlFor="end_date">Дата окончания:</label>
 						<input
@@ -131,7 +161,15 @@
 							id="end_date"
 							name="end_date"
 						/>
+						<input
+							type="checkbox"
+							id="enable_end_date"
+							checked={isEndDateEnabled}
+							onChange={() => setIsEndDateEnabled(!isEndDateEnabled)}
+						/>
+						<label htmlFor="enable_end_date">Включить</label>
 					</div>
+
 					<div>
 						<p>Сортировка по:</p>
 						<input
@@ -162,13 +200,11 @@
 						/>
 						<label htmlFor="relevance">По релевантности</label>
 					</div>
-					<button
-						onClick={handleSubmit}
-					>
+					<button onClick={handleSubmit}>
 						Сохранить настройки
 					</button>
 					<p>
-						<span style={{fontSize: "8px"}}>v_a0.0.016</span>
+						<span style={{ fontSize: "8px" }}>v_a0.0.017</span>
 					</p>
 				</div>
 			);
