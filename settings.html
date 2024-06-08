@@ -135,77 +135,83 @@
 			};
 
 			return (
-				<div>
-					<div className="form-group">
-						<label htmlFor="start_date">Дата начала поиска:</label>
-						<input
-							type="text"
-							className="form-control date-input"
-							id="start_date"
-							name="start_date"
-						/>
-						<input
-							type="checkbox"
-							id="enable_start_date"
-							checked={isStartDateEnabled}
-							onChange={() => setIsStartDateEnabled(!isStartDateEnabled)}
-						/>
-						<label htmlFor="enable_start_date">Включить</label>
-					</div>
+				<div className="container">
+					<div className="row justify-content-center">
+						<h2 className="text-center mb-6">Настройки</h2>
+						<div className="form-group col-md-6">
+							<label htmlFor="start_date">Дата начала поиска:</label>
+							<br />
+							<input
+								type="text"
+								className="form-control date-input"
+								id="start_date"
+								name="start_date"
+							/>
+							<input
+								type="checkbox"
+								id="enable_start_date"
+								checked={isStartDateEnabled}
+								onChange={() => setIsStartDateEnabled(!isStartDateEnabled)}
+							/>
+							<label htmlFor="enable_start_date">Включить</label>
+						</div>
+						<br />
 
-					<div className="form-group">
-						<label htmlFor="end_date">Дата окончания:</label>
-						<input
-							type="text"
-							className="form-control date-input"
-							id="end_date"
-							name="end_date"
-						/>
-						<input
-							type="checkbox"
-							id="enable_end_date"
-							checked={isEndDateEnabled}
-							onChange={() => setIsEndDateEnabled(!isEndDateEnabled)}
-						/>
-						<label htmlFor="enable_end_date">Включить</label>
-					</div>
+						<div className="form-group">
+							<label htmlFor="end_date">Дата окончания:</label>
+							<br />
+							<input
+								type="text"
+								className="form-control date-input"
+								id="end_date"
+								name="end_date"
+							/>
+							<input
+								type="checkbox"
+								id="enable_end_date"
+								checked={isEndDateEnabled}
+								onChange={() => setIsEndDateEnabled(!isEndDateEnabled)}
+							/>
+							<label htmlFor="enable_end_date">Включить</label>
+						</div>
 
-					<div>
-						<p>Сортировка по:</p>
-						<input
-							type="radio"
-							id="date_asc"
-							name="sort"
-							value="date_asc"
-							checked={sortBy === 'date_asc'}
-							onChange={() => setSortBy('date_asc')}
-						/>
-						<label htmlFor="date">По дате ↑ </label>
-						<input
-							type="radio"
-							id="date_desc"
-							name="sort"
-							value="date_desc"
-							checked={sortBy === 'date_desc'}
-							onChange={() => setSortBy('date_desc')}
-						/>
-						<label htmlFor="date">По дате ↓</label>
-						<input
-							type="radio"
-							id="relevance"
-							name="sort"
-							value="relevance"
-							checked={sortBy === 'relevance'}
-							onChange={() => setSortBy('relevance')}
-						/>
-						<label htmlFor="relevance">По релевантности</label>
+						<div>
+							<p>Сортировка по:</p>
+							<input
+								type="radio"
+								id="date_asc"
+								name="sort"
+								value="date_asc"
+								checked={sortBy === 'date_asc'}
+								onChange={() => setSortBy('date_asc')}
+							/>
+							<label htmlFor="date">По дате ↑ </label>
+							<input
+								type="radio"
+								id="date_desc"
+								name="sort"
+								value="date_desc"
+								checked={sortBy === 'date_desc'}
+								onChange={() => setSortBy('date_desc')}
+							/>
+							<label htmlFor="date">По дате ↓</label>
+							<input
+								type="radio"
+								id="relevance"
+								name="sort"
+								value="relevance"
+								checked={sortBy === 'relevance'}
+								onChange={() => setSortBy('relevance')}
+							/>
+							<label htmlFor="relevance">По релевантности</label>
+						</div>
+						<button onClick={handleSubmit}>
+							Сохранить настройки
+						</button>
+						<p>
+							<span style={{ fontSize: "8px" }}>v_a0.0.018</span>
+						</p>
 					</div>
-					<button onClick={handleSubmit}>
-						Сохранить настройки
-					</button>
-					<p>
-						<span style={{ fontSize: "8px" }}>v_a0.0.017</span>
-					</p>
 				</div>
 			);
 		};
