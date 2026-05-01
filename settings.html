@@ -8,11 +8,8 @@
 	<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
 	<script src="https://unpkg.com/@babel/standalone@7.10.3/babel.min.js" crossorigin></script>
 	<script src="https://telegram.org/js/telegram-web-app.js"></script>
-	<!-- Подключение стилей flatpickr -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-	<!-- Подключение скрипта flatpickr -->
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-	<!-- Подключение скрипта локализации для русского языка -->
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
 
 	<style>
@@ -71,7 +68,7 @@
 						if (decodedSettings.sort_by) {
 							setSortBy(decodedSettings.sort_by);
 						}
-						// НОВОЕ: Читаем сохраненную зону или автоопределяем
+						// Читаем сохраненную зону или автоопределяем
 						if (decodedSettings.tz_offset !== undefined) {
 							setTzOffset(decodedSettings.tz_offset);
 						} else {
@@ -116,21 +113,25 @@
 
 			React.useEffect(() => {
 				const startDateInput = document.getElementById('start_date');
-				startDateInput.disabled = !isStartDateEnabled;
-				if (!isStartDateEnabled) {
-					startDateInput.value = "*";
-				} else {
-					startDateInput.value = startDate ? startDate : '';
+				if (startDateInput) {
+					startDateInput.disabled = !isStartDateEnabled;
+					if (!isStartDateEnabled) {
+						startDateInput.value = "*";
+					} else {
+						startDateInput.value = startDate ? startDate : '';
+					}
 				}
 			}, [isStartDateEnabled, startDate]);
 
 			React.useEffect(() => {
 				const endDateInput = document.getElementById('end_date');
-				endDateInput.disabled = !isEndDateEnabled;
-				if (!isEndDateEnabled) {
-					endDateInput.value = "*";
-				} else {
-					endDateInput.value = endDate ? endDate : '';
+				if (endDateInput) {
+					endDateInput.disabled = !isEndDateEnabled;
+					if (!isEndDateEnabled) {
+						endDateInput.value = "*";
+					} else {
+						endDateInput.value = endDate ? endDate : '';
+					}
 				}
 			}, [isEndDateEnabled, endDate]);
 
@@ -139,7 +140,7 @@
 					start_date: isStartDateEnabled ? startDate : "*",
 					end_date: isEndDateEnabled ? endDate : "*",
 					sort_by: sortBy,
-					tz_offset: Number(tzOffset) // Отправляем зону из стейта
+					tz_offset: Number(tzOffset)
 				};
 				Telegram.WebApp.sendData(JSON.stringify(settings));
 			};
@@ -148,6 +149,48 @@
 				<div className="container">
 					<div className="row justify-content-center">
 						<h2 className="text-center mb-6">Настройки</h2>
+						
+						{/* Поле даты начала */}
+						<div className="form-group col-md-6">
+							<label htmlFor="start_date">Дата начала поиска:</label>
+							<br />
+							<input
+								type="text"
+								className="form-control date-input"
+								id="start_date"
+								name="start_date"
+							/>
+							<input
+								type="checkbox"
+								id="enable_start_date"
+								checked={isStartDateEnabled}
+								onChange={() => setIsStartDateEnabled(!isStartDateEnabled)}
+							/>
+							<label htmlFor="enable_start_date">Включить</label>
+						</div>
+						<br />
+
+						{/* Поле даты окончания */}
+						<div className="form-group">
+							<label htmlFor="end_date">Дата окончания:</label>
+							<br />
+							<input
+								type="text"
+								className="form-control date-input"
+								id="end_date"
+								name="end_date"
+							/>
+							<input
+								type="checkbox"
+								id="enable_end_date"
+								checked={isEndDateEnabled}
+								onChange={() => setIsEndDateEnabled(!isEndDateEnabled)}
+							/>
+							<label htmlFor="enable_end_date">Включить</label>
+						</div>
+						<br />
+
+						{/* Поле настройки часового пояса */}
 						<div className="form-group mb-3">
 							<p>Часовой пояс:</p>
 							<select 
@@ -166,6 +209,7 @@
 						</div>
 						<br />
 
+						{/* Поле сортировки */}
 						<div>
 							<p>Сортировка по:</p>
 							<input
@@ -176,7 +220,7 @@
 								checked={sortBy === 'date_asc'}
 								onChange={() => setSortBy('date_asc')}
 							/>
-							<label htmlFor="date">По дате ↑ </label>
+							<label htmlFor="date_asc">По дате ↑ </label>
 							<input
 								type="radio"
 								id="date_desc"
@@ -185,7 +229,7 @@
 								checked={sortBy === 'date_desc'}
 								onChange={() => setSortBy('date_desc')}
 							/>
-							<label htmlFor="date">По дате ↓</label>
+							<label htmlFor="date_desc">По дате ↓</label>
 							<input
 								type="radio"
 								id="relevance"
@@ -196,11 +240,13 @@
 							/>
 							<label htmlFor="relevance">По релевантности</label>
 						</div>
-						<button onClick={handleSubmit}>
+						<br />
+
+						<button onClick={handleSubmit} style={{ width: '100%', padding: '10px' }}>
 							Сохранить настройки
 						</button>
-						<p>
-							<span style={{ fontSize: "8px" }}>v_a0.0.018</span>
+						<p className="text-center mt-3">
+							<span style={{ fontSize: "10px", color: "#888" }}>v_a0.0.019</span>
 						</p>
 					</div>
 				</div>
